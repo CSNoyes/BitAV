@@ -1,5 +1,6 @@
 import urllib, urllib2
 from virus_total_apis import PublicApi as vtAPI
+import consensus
 apiKey = '72567edcd2b6af6da376b765f73b867fa7fe8606b9fab0e5319f4504eb6fce55'
 
 def sigCheck(malSig, type):
@@ -30,8 +31,8 @@ def sigCheck(malSig, type):
         if report['results']['response_code'] == 0:
             return False
         elif report['results']['response_code'] == 1:
-            if (int(report['results']['positives']) / int(report['results']['total'])) >= 0.2:
+            if (int(report['results']['positives']) / int(report['results']['total'])) >= 0.5:
                 return True
             else:
-                # this is the error case
+                # error case, in order to drop sig must be known good
                 return False

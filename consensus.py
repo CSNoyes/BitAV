@@ -12,7 +12,6 @@ import multiprocessing
 import random
 import time
 
-
 def peers_check(peers, DB):
     # Check on the peers to see if they know about more blocks than we do.
     def peer_check(peer, DB):
@@ -78,20 +77,17 @@ def peers_check(peers, DB):
     for peer in peers:
         peer_check(peer, DB)
 
-
 def suggestions(DB):
     [blockchain.add_tx(tx, DB) for tx in DB['suggested_txs']]
     DB['suggested_txs'] = []
     [blockchain.add_block(block, DB) for block in DB['suggested_blocks']]
     DB['suggested_blocks'] = []
 
-
 def mainloop(peers, DB):
     while True:
         time.sleep(1)
         peers_check(peers, DB)
         suggestions(DB)
-
 
 def miner_controller(reward_address, peers, hashes_till_check, DB):
     """ Spawns worker CPU mining processes and coordinates the effort."""
@@ -175,7 +171,6 @@ def miner_controller(reward_address, peers, hashes_till_check, DB):
             continue
         DB['suggested_blocks'].append(solved_block)
         restart_workers()
-
 
 def miner(block_submit_queue, get_work_queue, restart_signal):
     def POW(block, hashes):

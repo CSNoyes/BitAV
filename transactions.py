@@ -34,38 +34,10 @@ def sigVerify(tx, txs, DB):
         return False
     return True
 
-def spend_verify(tx, txs, DB):
-
-    def sigs_match(sigs, pubs, msg):
-        return all(tools.verify(msg, sig, pub) for sig in sigs for pub in pubs)
-
-    tx_copy = copy.deepcopy(tx)
-    tx_copy_2 = copy.deepcopy(tx)
-    tx_copy.pop('signatures')
-    if len(tx['pubkeys']) == 0:
-        return False
-    if len(tx['signatures']) > len(tx['pubkeys']):
-        return False
-    msg = tools.detSha(tx_copy)
-    if not sigs_match(copy.deepcopy(tx['signatures']),
-                      copy.deepcopy(tx['pubkeys']), msg):
-        return False
-    if tx['amount'] < custom.fee:
-        return False
-    address = addr(tx_copy_2)
-    total_cost = 0
-    for Tx in filter(lambda t: address == addr(t), [tx] + txs):
-        if Tx['type'] == 'spend':
-            total_cost += Tx['amount']
-        if Tx['type'] == 'mint':
-            total_cost -= custom.block_reward
-    return int(blockchain.db_get(address, DB)['amount']) >= total_cost
-
 def mint_verify(tx, txs, DB):
     return 0 == len(filter(lambda t: t['type'] == 'mint', txs))
-tx_check = {'add': sigVerify, 'drop': sigVerify, 'mint': spend_verify}
-#------------------------------------------------------
-#DB['add_block']=True -> adding a block.
+
+tx_check = {'add': sigVerify, 'drop': sigVerify, 'mint': mint_verify}
 
 def adjust(key, pubkey, amount, DB, sign=1):
     acc = blockchain.db_get(pubkey, DB)
@@ -80,10 +52,8 @@ def mint(tx, DB):
     adjust('count', address, 1, DB)
 
 
-def spend(tx, DB):
-    address = addr(tx)
-    adjust('amount', address, -tx['amount'], DB)
-    adjust('amount', tx['to'], tx['amount'] - custom.fee, DB)
-    adjust('count', address, 1, DB)
-update = {'mint': mint, 'spend': spend}
+def void(tx, DB):
+    pass
+
+update = {'mint': mint, 'add': void, 'drop': void}
 #-----------------------------------------

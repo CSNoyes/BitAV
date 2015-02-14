@@ -60,7 +60,7 @@ def add_tx(tx, DB):
             return False
         if tx in txs:
             return False
-        if verify_count(tx, txs):
+        if verify_count(tx, txs): # todo: this is causing the issue, update verify_cound method
             return False
         if too_big_block(tx, txs):
             return False
