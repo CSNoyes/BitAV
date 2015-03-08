@@ -8,7 +8,7 @@ import networking
 import gui
 import sys
 
-sigdb = leveldb.LevelDB(custom.sigDB)
+sigdb = leveldb.LevelDB(custom.sigDB) #TODO: load existing DB instead of creating new one
 sigDB = {'db': sigdb,
          'recentHash': 0,
          'length': -1,

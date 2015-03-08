@@ -45,7 +45,7 @@ def add_tx(tx, DB):
     address = tools.make_address(tx['pubkeys'], len(tx['signatures']))
 
     def verify_count(tx, txs):
-        return tx['count'] != counttest(address, DB)
+        return tx['count'] != count(address, DB)
 
     def type_check(tx, txs):
         if 'type' not in tx:
