@@ -18,11 +18,10 @@ for k,v in db.RangeIter():
 
 if keys:
     lastBlock = db.Get(keys[-1])
-    print max(keys)
     print lastBlock
     lastBlock = json.loads(lastBlock)
     sigDB = {'db': db,
-          'recentHash': tools.det_hash(lastBlock),
+          'recentHash': tools.detSha(lastBlock),
           'length': lastBlock['length'],
           'txs': [],
           'suggested_blocks': [],
