@@ -10,23 +10,23 @@ import sys
 
 sigdb = leveldb.LevelDB(custom.sigDB)
 sigDB = {'db': sigdb,
-      'recentHash': 0,
-      'length': -1,
-      'sigLength': -1,
-      'txs': [],
-      'suggested_blocks': [],
-      'suggested_txs': [],
-      'diffLength': '0'}
+         'recentHash': 0,
+         'length': -1,
+         'sigLength': -1,
+         'txs': [],
+         'suggested_blocks': [],
+         'suggested_txs': [],
+         'diffLength': '0'}
 
 curdb = leveldb.LevelDB(custom.curDB)
 curDB = {'db': curdb,
-      'recentHash': 0,
-      'length': -1,
-      'sigLength': -1,
-      'txs': [],
-      'suggested_blocks': [],
-      'suggested_txs': [],
-      'diffLength': '0'}
+         'recentHash': 0,
+         'length': -1,
+         'sigLength': -1,
+         'txs': [],
+         'suggested_blocks': [],
+         'suggested_txs': [],
+         'diffLength': '0'}
 
 worker_tasks = [
     # Keeps track of blockchain database, checks on peers for new blocks and
@@ -57,6 +57,7 @@ def start_worker_proc(**kwargs):
     proc.daemon = is_daemon
     proc.start()
     return proc
+
 
 workers = [start_worker_proc(**task_info) for task_info in worker_tasks]
 try:

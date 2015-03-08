@@ -12,6 +12,7 @@ import multiprocessing
 import random
 import time
 
+
 def peers_check(peers, DB):
     # Check on the peers to see if they know about more blocks than we do.
     def peer_check(peer, DB):
@@ -77,11 +78,13 @@ def peers_check(peers, DB):
     for peer in peers:
         peer_check(peer, DB)
 
+
 def suggestions(DB):
     [blockchain.add_tx(tx, DB) for tx in DB['suggested_txs']]
     DB['suggested_txs'] = []
     [blockchain.add_block(block, DB) for block in DB['suggested_blocks']]
     DB['suggested_blocks'] = []
+
 
 def mainloop(peers, DB):
     while True:
@@ -89,8 +92,10 @@ def mainloop(peers, DB):
         peers_check(peers, DB)
         suggestions(DB)
 
+
 def miner_controller(reward_address, peers, hashes_till_check, DB):
     """ Spawns worker CPU mining processes and coordinates the effort."""
+
     def make_mint(pubkey, DB):
         address = tools.make_address([reward_address], 1)
         return {'type': 'mint',
@@ -124,6 +129,7 @@ def miner_controller(reward_address, peers, hashes_till_check, DB):
                'prevHash': tools.detSha(prev_block)}
         out = tools.unpackage(tools.package(out))
         return out
+
     def restart_workers():
         print("Possible solution found, restarting mining workers.")
         for worker_mailbox in worker_mailboxes:
@@ -172,13 +178,14 @@ def miner_controller(reward_address, peers, hashes_till_check, DB):
         DB['suggested_blocks'].append(solved_block)
         restart_workers()
 
+
 def miner(block_submit_queue, get_work_queue, restart_signal):
     def POW(block, hashes):
         halfHash = tools.detSha(block)
         block[u'nonce'] = random.randint(0, 10000000000000000000000000000000000000000)
         count = 0
         while tools.detSha({u'nonce': block['nonce'],
-                              u'halfHash': halfHash}) > block['target']:
+                            u'halfHash': halfHash}) > block['target']:
             count += 1
             block[u'nonce'] += 1
             if count > hashes:
@@ -191,6 +198,7 @@ def miner(block_submit_queue, get_work_queue, restart_signal):
             else: time.sleep(0.01)
             '''
         return block
+
     block_header = None
     need_new_work = False
     while True:

@@ -12,7 +12,6 @@ def addr(tx):
 
 
 def sigVerify(tx, txs, DB):
-
     def sigs_match(sigs, pubs, msg):
         x = all(tools.verify(msg, sig, pub) for sig in sigs for pub in pubs)
         return x
@@ -34,15 +33,18 @@ def sigVerify(tx, txs, DB):
         return False
     return True
 
+
 def mint_verify(tx, txs, DB):
     return 0 == len(filter(lambda t: t['type'] == 'mint', txs))
 
+
 tx_check = {'add': sigVerify, 'drop': sigVerify, 'mint': mint_verify}
+
 
 def adjust(key, pubkey, amount, DB, sign=1):
     acc = blockchain.db_get(pubkey, DB)
-    if not DB['add_block']: sign=-1
-    acc[key] += amount*sign
+    if not DB['add_block']: sign = -1
+    acc[key] += amount * sign
     blockchain.db_put(pubkey, acc, DB)
 
 
@@ -55,5 +57,6 @@ def mint(tx, DB):
 def void(tx, DB):
     pass
 
+
 update = {'mint': mint, 'add': void, 'drop': void}
-#-----------------------------------------
+# -----------------------------------------

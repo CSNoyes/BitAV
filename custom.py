@@ -5,6 +5,8 @@ import hashlib
 
 def hash_(x):
     return hashlib.sha256(x).hexdigest()
+
+
 sigDB = 'sigDB.db'
 curDB = 'curDB.db'
 listen_port = 8900
@@ -25,7 +27,7 @@ history_length = 400
 inflection = 0.985
 download_many = 500  # Max number of blocks to request from a peer at the same time.
 max_download = 50000
-brainwallet = 'brainDefault' # passphrase / wallet generation seed
+brainwallet = 'brainDefault'  # passphrase / wallet generation seed
 privkey = tools.detSha(brainwallet)
 pubkey = tools.privtopub(privkey)
 peers = [['localhost', 8901],
@@ -34,6 +36,7 @@ peers = [['localhost', 8901],
          ['localhost', 8904],
          ['localhost', 8905]]
 hashes_per_check = 10 ** 5
+
 
 def blocktime(length):
     if length * block_reward < premine:

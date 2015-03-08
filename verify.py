@@ -1,10 +1,11 @@
 import urllib, urllib2
 from virus_total_apis import PublicApi as vtAPI
 import consensus
+
 apiKey = '72567edcd2b6af6da376b765f73b867fa7fe8606b9fab0e5319f4504eb6fce55'
 
-def sigCheck(malSig, type):
 
+def sigCheck(malSig, type):
     def getReport(sig):
         vt = vtAPI(apiKey)
         report = vt.get_file_report(sig)

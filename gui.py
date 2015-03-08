@@ -1,6 +1,3 @@
-""" The easiest way to understand this file is to try it out and have a look at
-the html it creates. It creates a very simple page that allows you to spend
-money."""
 import copy
 import tools
 import blockchain
@@ -8,19 +5,20 @@ import custom
 import http
 
 
-def add(malSig, bitAddress, pubkey, privkey,  DB):
+def add(malSig, pubkey, privkey, DB):
     tx = {'type': 'add',
           'malSig': malSig,
           'pubkeys': [pubkey],
-          'curAddr': bitAddress,}
+          }
     easy_add_transaction(tx, privkey, DB)
 
-def drop(malSig, bitAddress, pubkey, privkey, DB):
+
+def drop(malSig, pubkey, privkey, DB):
     tx = {'type': 'drop',
           'malSig': malSig,
-          'pubkeys': [pubkey],
-          'curAddr': bitAddress,}
+          'pubkeys': [pubkey],}
     easy_add_transaction(tx, privkey, DB)
+
 
 def easy_add_transaction(tx_orig, privkey, DB):
     tx = copy.deepcopy(tx_orig)
@@ -34,7 +32,8 @@ def easy_add_transaction(tx_orig, privkey, DB):
     print('CREATED TX: ' + str(tx))
     blockchain.add_tx(tx, DB)
 
-submit_form='''
+
+submit_form = '''
 <form name="first" action="{}" method="{}">
 <input type="submit" value="{}">{}
 </form> {}
@@ -48,6 +47,7 @@ def easyForm(link, button_says, more_html='', form_type='post'):
         return a.format('get', '{}')
     else:
         return a.format('post', '{}')
+
 
 linkHome = easyForm('/', 'HOME', '', 'get')
 
@@ -68,9 +68,9 @@ def home(DB, dic):
     pubkey = tools.privtopub(dic['privkey'])
     address = tools.make_address([pubkey], 1)
     if 'doAdd' in dic:
-        add(dic['malSig'], dic['currencyAddress'], pubkey, privkey, DB)
+        add(dic['malSig'], pubkey, privkey, DB)
     if 'doDrop' in dic:
-        drop(dic['malSig'], dic['currencyAddress'], pubkey, privkey, DB)
+        drop(dic['malSig'], pubkey, privkey, DB)
     out = empty_page
     out = out.format('<p>your address: ' + str(address) + '</p>{}')
     out = out.format('<p>current block: ' + str(DB['length']) + '</p>{}')
@@ -80,23 +80,20 @@ def home(DB, dic):
             balance += tx['amount'] - custom.fee
         if tx['type'] == 'spend' and tx['pubkeys'][0] == pubkey:
             balance -= tx['amount']
-    out = out.format('<p>current balance is: ' + str(balance/100000.0) + '</p>{}')
+    out = out.format('<p>current balance is: ' + str(balance / 100000.0) + '</p>{}')
     if balance > 0:
         out = out.format(easyForm(
-        '/home', 'add signatures', '''
+            '/home', 'add signatures', '''
         <input type="hidden" name="doAdd" value="add">
         <input type="text" name="malSig" value="malware signature">
-                <input type="text" name="currencyAddress" value="Money Address">
         <input type="hidden" name="privkey" value="{}">'''.format(privkey)))
 
         out = out.format(easyForm('/home', 'remove signatures', '''
         <input type="hidden" name="doDrop" value="drop">
         <input type="text" name="malSig" value="malware signature">
-        <input type="text" name="currencyAddress" value="Money Address">
         <input type="hidden" name="privkey" value="{}">'''.format(privkey)))
 
-
-    txt='''    <input type="hidden" name="privkey" value="{}">'''
+    txt = '''    <input type="hidden" name="privkey" value="{}">'''
     s = easyForm('/home', 'Refresh', txt.format(privkey))
     return out.format(s)
 

@@ -3,7 +3,7 @@ import hashlib
 from json import dumps as package, loads as unpackage
 from collections import OrderedDict
 
-#def pub2addr(pubkey): return pt.pubtoaddr(pubkey)
+# def pub2addr(pubkey): return pt.pubtoaddr(pubkey)
 
 
 def sign(msg, privkey):
@@ -24,7 +24,7 @@ def detSha(x):
     def det_list(l): return '[%s]' % ','.join(map(det, sorted(l)))
 
     def det_dict(x):
-        list_=map(lambda p: det(p[0]) + ':' + det(p[1]), sorted(x.items()))
+        list_ = map(lambda p: det(p[0]) + ':' + det(p[1]), sorted(x.items()))
         return '{%s}' % ','.join(list_)
 
     def det(x): return {list: det_list, dict: det_dict}.get(type(x), str)(x)

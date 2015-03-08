@@ -27,7 +27,6 @@ def POST(DB, request_dict, func):
 
 
 def server(DB, port, get_func, post_func):
-
     def handler(request_dict):
         method = request_dict['method']
         if method == 'GET':

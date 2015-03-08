@@ -33,10 +33,11 @@ def count(address, DB):
     def zeroth_confirmation_txs(address, DB):
         def is_zero_conf(t):
             return address == tools.make_address(t['pubkeys'], len(t['signatures']))
+
         return len(filter(is_zero_conf, DB['txs']))
 
     current = db_get(address, DB)['count']
-    return current+zeroth_confirmation_txs(address, DB)
+    return current + zeroth_confirmation_txs(address, DB)
 
 
 def add_tx(tx, DB):
@@ -44,7 +45,7 @@ def add_tx(tx, DB):
     address = tools.make_address(tx['pubkeys'], len(tx['signatures']))
 
     def verify_count(tx, txs):
-        return tx['count'] != count(address, DB)
+        return tx['count'] != counttest(address, DB)
 
     def type_check(tx, txs):
         if 'type' not in tx:
@@ -53,14 +54,14 @@ def add_tx(tx, DB):
         return finCheck
 
     def too_big_block(tx, txs):
-        return len(tools.package(txs+[tx])) > networking.MAX_MESSAGE_SIZE - 5000
+        return len(tools.package(txs + [tx])) > networking.MAX_MESSAGE_SIZE - 5000
 
     def verify_tx(tx, txs):
         if type_check(tx, txs):
             return False
         if tx in txs:
             return False
-        if verify_count(tx, txs): # todo: this is causing the issue, update verify_cound method
+        if verify_count(tx, txs):
             return False
         if too_big_block(tx, txs):
             return False
@@ -68,6 +69,7 @@ def add_tx(tx, DB):
 
     if verify_tx(tx, DB['txs']):
         DB['txs'].append(tx)
+
 
 targets = {}
 times = {}  # Stores blocktimes
@@ -88,13 +90,13 @@ def recent_blockthings(key, DB, size, length=0):
 
     if length == 0:
         length = DB['length']
-    start = (length-size) if (length-size) >= 0 else 0
+    start = (length - size) if (length - size) >= 0 else 0
     return map(get_val, range(start, length))
 
 
 def hexSum(a, b):
     # Sum of numbers expressed as hexidecimal strings
-    return tools.buffer_(str(hex(int(a, 16)+int(b, 16)))[2: -1], 64)
+    return tools.buffer_(str(hex(int(a, 16) + int(b, 16)))[2: -1], 64)
 
 
 def hexInvert(n):
@@ -117,7 +119,7 @@ def target(DB, length=0):
         return tools.buffer_(str(hex(b))[2: -1], 64)
 
     def weights(length):
-        return [custom.inflection ** (length-i) for i in range(length)]
+        return [custom.inflection ** (length - i) for i in range(length)]
 
     def estimate_target(DB):
         """
@@ -125,6 +127,7 @@ def target(DB, length=0):
         mine a block. number of hashes required is inversely proportional
         to target. So we average over inverse-targets, and inverse the final
         answer. """
+
         def sumTargets(l):
             if len(l) < 1:
                 return 0
@@ -138,7 +141,8 @@ def target(DB, length=0):
         targets = map(hexInvert, targets)
 
         def weighted_multiply(i):
-            return targetTimesFloat(targets[i], w[i]/tw)
+            return targetTimesFloat(targets[i], w[i] / tw)
+
         weighted_targets = [weighted_multiply(i) for i in range(len(targets))]
         return hexInvert(sumTargets(weighted_targets))
 
@@ -157,6 +161,7 @@ def add_block(block, DB):
     """Attempts adding a new block to the blockchain.
      Median is good for weeding out liars, so long as the liars don't have 51%
      hashpower. """
+
     def median(mylist):
         if len(mylist) < 1:
             return 0
@@ -176,6 +181,7 @@ def add_block(block, DB):
                 else:
                     return True  # Block is invalid
             return True  # Block is invalid
+
         if not isinstance(block, dict):
             return False
         if 'error' in block:
@@ -219,9 +225,9 @@ def add_block(block, DB):
         orphans = copy.deepcopy(DB['txs'])
         DB['txs'] = []
         for tx in block['txs']:
-            DB['add_block']=True
+            DB['add_block'] = True
             transactions.update[tx['type']](tx, DB)
-        for tx in orphans:
+        for tx in orphans:  # epiphany: orphans are in case our last created block is not accepted
             add_tx(tx, DB)
 
 
@@ -242,7 +248,7 @@ def delete_block(DB):
     DB['txs'] = []
     for tx in block['txs']:
         orphans.append(tx)
-        DB['add_block']=False
+        DB['add_block'] = False
         transactions.update[tx['type']](tx, DB)
     db_delete(DB['length'], DB)
     DB['length'] -= 1

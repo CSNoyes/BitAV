@@ -4,6 +4,7 @@ import subprocess
 import re
 import tools
 import custom
+
 MAX_MESSAGE_SIZE = 60000
 
 
@@ -31,7 +32,7 @@ def serve_forever(message_handler_func, PORT, queue):
         client, addr = server.accept()
         (ip, port) = addr
         data = client.recv(MAX_MESSAGE_SIZE)
-        #we could insert security checks here
+        # we could insert security checks here
         data = tools.unpackage(data)
         client.sendall(tools.package(message_handler_func(data, queue)))
 
@@ -48,10 +49,10 @@ def connect(msg, host, port):
         s.connect((str(host), int(port)))
         s.sendall(msg)
         response = s.recv(MAX_MESSAGE_SIZE)
-        #print(response)
+        # print(response)
         return tools.unpackage(response)
     except Exception as e:
-        #print('THE ERROR WAS: ' +str(e))
+        # print('THE ERROR WAS: ' +str(e))
         #print('disconnect')
         return {'error': e}
 
