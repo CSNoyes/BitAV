@@ -8,7 +8,6 @@ def hash_(x):
 
 
 sigDB = 'sigDB.db'
-curDB = 'curDB.db'
 listen_port = 8900
 gui_port = 8700
 version = "BitAV 0.1"

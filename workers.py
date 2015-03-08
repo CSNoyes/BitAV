@@ -18,16 +18,6 @@ sigDB = {'db': sigdb,
          'suggested_txs': [],
          'diffLength': '0'}
 
-curdb = leveldb.LevelDB(custom.curDB)
-curDB = {'db': curdb,
-         'recentHash': 0,
-         'length': -1,
-         'sigLength': -1,
-         'txs': [],
-         'suggested_blocks': [],
-         'suggested_txs': [],
-         'diffLength': '0'}
-
 worker_tasks = [
     # Keeps track of blockchain database, checks on peers for new blocks and
     # transactions.
