@@ -7,16 +7,37 @@ import leveldb
 import networking
 import gui
 import sys
+import tools
+import json
 
-sigdb = leveldb.LevelDB(custom.sigDB) #TODO: load existing DB instead of creating new one
-sigDB = {'db': sigdb,
-         'recentHash': 0,
-         'length': -1,
-         'sigLength': -1,
-         'txs': [],
-         'suggested_blocks': [],
-         'suggested_txs': [],
-         'diffLength': '0'}
+db = leveldb.LevelDB(custom.sigDB) #TODO: load existing DB instead of creating new one
+
+keys = []  # TODO: Clean this up. LvlDB has no count method.
+for k,v in db.RangeIter():
+    keys.append(k)
+
+if keys:
+    lastBlock = db.Get(keys[-1])
+    print max(keys)
+    print lastBlock
+    lastBlock = json.loads(lastBlock)
+    sigDB = {'db': db,
+          'recentHash': tools.det_hash(lastBlock),
+          'length': lastBlock['length'],
+          'txs': [],
+          'suggested_blocks': [],
+          'suggested_txs': [],
+          'diffLength': lastBlock['diffLength']}
+
+else:
+    sigDB = {'db': db,
+      'recentHash': 0,
+      'length': -1,
+      'sigLength': -1,
+      'txs': [],
+      'suggested_blocks': [],
+      'suggested_txs': [],
+      'diffLength': '0'}
 
 worker_tasks = [
     # Keeps track of blockchain database, checks on peers for new blocks and
