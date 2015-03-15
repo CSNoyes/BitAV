@@ -1,3 +1,4 @@
 *.py[cod]
 *.db/
 *.idea/
+sigDB.db/
