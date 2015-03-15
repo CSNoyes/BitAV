@@ -12,14 +12,21 @@ import json
 
 db = leveldb.LevelDB(custom.sigDB) #TODO: load existing DB instead of creating new one
 
-keys = []  # TODO: Clean this up. LvlDB has no count method.
-for k,v in db.RangeIter():
-    keys.append(k)
+lengths = []  # TODO: Clean this up. LvlDB has no count method.
+blocks = {}
 
-if keys:
-    lastBlock = db.Get(keys[-1])
-    print lastBlock
-    lastBlock = json.loads(lastBlock)
+for key,block in db.RangeIter():
+    block = json.loads(block)
+    if 'amount' in block:
+        pass
+    else:
+        lengths.append(block['length'])
+        blocks[block['length']] = key
+
+maxLength = max(lengths)
+lastBlock = json.loads(db.Get(blocks[maxLength]))
+
+if lastBlock:
     sigDB = {'db': db,
           'recentHash': tools.detSha(lastBlock),
           'length': lastBlock['length'],
