@@ -17,7 +17,7 @@ class BloomierFilter:
 
         self.hashSeed = hashSalt
         self.keysDict = keysDict
-        self.m = int(-((len(keysDict)*log(p))/(log(2)**2)))
+        self.m = int(abs(((len(keysDict)*log(p))/(log(2)**2))))
         m = self.m
         self.k = int((self.m/len(keysDict)) * log(2))
         k = self.k
