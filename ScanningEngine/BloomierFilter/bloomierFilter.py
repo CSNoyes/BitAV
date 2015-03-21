@@ -65,7 +65,7 @@ class BloomierFilter:
             L = neighbors[h]
             return self.valueTable[L]
         except IndexError:
-            return None
+            return False
             
     def set(self, key, value):
         neighbors = self.hasher.getNeighborhood(key)
