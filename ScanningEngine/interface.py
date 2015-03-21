@@ -25,4 +25,4 @@ class ffBF:
         else:
             return False
 
-    
+    def
