@@ -1,6 +1,8 @@
 from random import Random
+
 from hash import *
-from util import *
+from ScanningEngine.Python.BloomierFilter.core.util import *
+
 
 class BloomierHasher:
     def __init__(self, hashSeed, m, k, q):

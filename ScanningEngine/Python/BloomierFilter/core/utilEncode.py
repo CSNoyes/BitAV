@@ -2,8 +2,7 @@
 # http://stackoverflow.com/questions/16818463/python-encode-decoder-for-serialization-deserialization-javas-kyro-equivalence
 # http://stackoverflow.com/questions/11624190/python-convert-string-to-byte-array
 # http://stackoverflow.com/questions/2611858/struct-error-unpack-requires-a-string-argument-of-length-4
-import struct
-from commonUtil import *
+from ScanningEngine.Python.BloomierFilter.core.commonUtil import *
 
 def encode(value, width=1): 
     """

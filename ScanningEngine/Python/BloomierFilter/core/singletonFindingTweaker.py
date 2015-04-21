@@ -1,4 +1,4 @@
-from bloomierHasher import *
+from ScanningEngine.Python.BloomierFilter.core.bloomierHasher import *
 PRINT = False
 
 class SingletonFindingTweaker:

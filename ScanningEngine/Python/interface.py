@@ -1,8 +1,8 @@
-import BloomierFilter.bloomierFilter as bloomier
-import Bloomfilter.fastFilter as bloom
+import ScanningEngine.Python.BloomierFilter.bloomierFilter as bloomier
+import ScanningEngine.Python.BloomFilter.fastFilter as bloom
 
 class ffBF:
-    # the smallest counting bloom filter I can make
+    # feedforward bloom-bloomier mechanism
     def __init__(self, values, p):
         # n: number of elements
         # p: desired false positive rate
@@ -25,4 +25,9 @@ class ffBF:
         else:
             return False
 
-    def
+    def add(self, sig):
+        if self.lookup(sig):
+            return False
+        else:
+            self.bloomFilter.add(sig)
+            self.bloomierFilter.set(sig,sig)

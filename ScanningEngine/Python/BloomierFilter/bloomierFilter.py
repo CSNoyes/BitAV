@@ -1,11 +1,11 @@
 #from core.bloomierHasher import *
 #import bloomierHasher
-from core.bloomierHasher import BloomierHasher
-from core.orderAndMatch import *
+from math import log
+
 from core.orderAndMatchFinder import *
 from core.utilEncode import *
-from core.util import *
-from math import log
+from ScanningEngine.Python.BloomierFilter.core.util import *
+
 
 class BloomierFilter:
     def __init__(self, keysDict, p, hashSalt = 0, useTable = False):

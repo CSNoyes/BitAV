@@ -1,9 +1,10 @@
-from bloomierHasher import *
-from orderAndMatch import *
 from copy import *
-from singletonFindingTweaker import *
-from util import *
 import sys
+
+from orderAndMatch import *
+from singletonFindingTweaker import *
+from ScanningEngine.Python.BloomierFilter.core.util import *
+
 
 class OrderAndMatchFinder:
     # def __init__(self, hashSeed, keysDict, m, k, q, maxTry = 5)

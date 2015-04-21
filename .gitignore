@@ -1,4 +1,6 @@
 *.py[cod]
 *.db/
 *.idea/
+ScanningEngine/Cpp/samples/
+ScanningEngine/Cpp/db.txt
 sigDBCopied.db/
